@@ -19,7 +19,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className="h-full antialiased"
     >
-      <body>
+      <body className="montserrat">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

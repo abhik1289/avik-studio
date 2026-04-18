@@ -1,40 +1,15 @@
 "use client";
-
-import Link from "next/link";
+import { useState,useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
-  ArrowRight,
   BadgeCheck,
-  Globe,
   LoaderCircle,
-  LockKeyhole,
-  Mail,
-  ShieldCheck,
-  Sparkles,
 } from "lucide-react";
-import { useState } from "react";
 
-import { ModeToggle } from "@/components/auth/theme-toggle";
-import { authClient } from "@/lib/auth/client";
+
+import { authClient, useSession } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
-const trustPoints = [
-  {
-    icon: ShieldCheck,
-    title: "Enterprise-ready access",
-    description: "Secure sign-in flows designed for teams, admins, and customer portals.",
-  },
-  {
-    icon: Sparkles,
-    title: "Beautiful by default",
-    description: "Clear hierarchy, calm spacing, and strong contrast across every screen size.",
-  },
-  {
-    icon: Globe,
-    title: "Works everywhere",
-    description: "Responsive layout with system-aware dark and light modes from first paint.",
-  },
-];
 
 function GoogleMark() {
   return (
@@ -59,15 +34,35 @@ function GoogleMark() {
   );
 }
 
-type SignInPanelProps = {
-  initialError?: string;
-};
 
-export function SignInPanel({ initialError }: SignInPanelProps) {
+
+export function SignInPanel() {
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [googleError, setGoogleError] = useState<string | null>(
-    initialError ?? null
-  );
+  const [googleError, setGoogleError] = useState<string | null>( null);
+  const {isPending,data} = useSession();
+  const router = useRouter();
+
+
+  // console.log(data,isPending)
+
+
+  useEffect(() => {
+    if(!isPending && data?.user){
+      router.replace("/dashboard");
+    }
+  },[isPending,data])
+    
+
+  if(isPending){
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <LoaderCircle className="size-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+
+
 
   async function handleGoogleSignIn() {
     try {
@@ -90,174 +85,89 @@ export function SignInPanel({ initialError }: SignInPanelProps) {
   }
 
   return (
-    <main className="relative isolate min-h-screen overflow-hidden px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-        <div className="flex items-center justify-between">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-3 rounded-full border border-border/60 bg-background/70 px-4 py-2 text-sm font-medium tracking-[0.24em] uppercase backdrop-blur supports-[backdrop-filter]:bg-background/60"
-          >
-            <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              A
-            </span>
-            Avik Studio
-          </Link>
-          <ModeToggle />
-        </div>
+    <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
 
-        <section className="grid min-h-[calc(100vh-7rem)] overflow-hidden rounded-[2rem] border border-border/60 bg-card/75 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.45)] backdrop-blur xl:grid-cols-[1.15fr_0.85fr]">
-          <div className="relative flex flex-col justify-between gap-12 overflow-hidden border-b border-border/60 px-6 py-8 sm:px-10 lg:border-r lg:border-b-0 lg:px-12 lg:py-12">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.16),transparent_34%),radial-gradient(circle_at_80%_20%,rgba(245,158,11,0.14),transparent_28%),linear-gradient(135deg,transparent,rgba(255,255,255,0.04))]" />
-            <div className="relative space-y-8">
-              <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/80 px-3 py-1 text-xs font-medium text-muted-foreground">
-                <BadgeCheck className="size-3.5 text-primary" />
-                Trusted workspace access
+        <section className=" w-full flex flex-col justify-between px-2 py-4 sm:px-6 xl:px-10 xl:py-10">
+          {/* <div className="flex items-center justify-between gap-4">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-3 text-lg font-semibold tracking-tight"
+            >
+              <span className="flex size-11 items-center justify-center rounded-2xl bg-foreground text-background shadow-sm">
+                A
               </span>
+              <span>Avik</span>
+            </Link>
+            <ModeToggle />
+          </div> */}
 
-              <div className="max-w-2xl space-y-5">
-                <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-                  Welcome back to the workspace that keeps teams moving.
+          <div className=" flex w-full w-6/12 flex-1 justify-center py-10">
+            <div className="space-y-6">
+              <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/85 px-4 py-2 text-sm font-medium text-muted-foreground shadow-sm">
+                <BadgeCheck className="size-4 text-primary" />
+                Secure workspace access
+              </span>
+              <div className="space-y-4">
+                <h1 className="text-5xl  tracking-tight text-balance sm:text-6xl sekuya-regular montserrat">
+                  Log in to your Avik account
                 </h1>
-                <p className="max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
-                  Sign in with your email and password, or continue with Google to
-                  get back to projects, approvals, and shared updates with a
-                  polished experience.
+                <p className="max-w-xl text-lg leading-8 text-muted-foreground nunito-special-regular ">
+                  Continue with Google to access your finance workspace, review
+                  approvals, and get back to the tools your team uses every day.
                 </p>
               </div>
             </div>
 
-            <div className="relative grid gap-4 md:grid-cols-3">
-              {trustPoints.map(({ icon: Icon, title, description }) => (
-                <article
-                  key={title}
-                  className="rounded-[1.5rem] border border-border/60 bg-background/70 p-5 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/55"
-                >
-                  <div className="mb-4 flex size-11 items-center justify-center rounded-2xl bg-primary/12 text-primary">
-                    <Icon className="size-5" />
+            <div className="mt-12 w-6/12 rounded-[2.25rem] border border-border/70 bg-background/88 p-6 shadow-[0_40px_100px_-52px_rgba(15,23,42,0.45)] backdrop-blur xl:p-8">
+              <div className="rounded-[1.75rem] border border-border/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(248,249,252,0.92))] p-5 dark:bg-[linear-gradient(180deg,rgba(36,41,54,0.86),rgba(25,29,39,0.94))]">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Preferred sign-in method
+                    </p>
+                    <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+                      Continue with Google
+                    </h2>
                   </div>
-                  <h2 className="text-base font-semibold">{title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    {description}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
+                  <div className="flex size-12 items-center justify-center rounded-2xl bg-white/85 shadow-sm dark:bg-white/10">
+                    <GoogleMark />
+                  </div>
+                </div>
 
-          <div className="relative flex items-center px-4 py-6 sm:px-8 lg:px-10">
-            <div className="mx-auto w-full max-w-md rounded-[2rem] border border-border/60 bg-background/88 p-6 shadow-[0_18px_55px_-30px_rgba(15,23,42,0.75)] backdrop-blur xl:p-8">
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-primary">Sign in</p>
-                <h2 className="text-3xl font-semibold tracking-tight">
-                  Access your account
-                </h2>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  Use your work credentials to continue. Google sign-in is ready
-                  when you prefer a faster path.
+                <p className="mt-4 max-w-lg text-sm leading-7 text-muted-foreground">
+                  One secure action, no extra fields. Use the Google account
+                  already connected to your workspace for the fastest entry.
                 </p>
-              </div>
-
-              {googleError ? (
-                <div className="mt-6 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                  {googleError === "google_auth_failed"
-                    ? "Google sign-in was cancelled or failed. Please try again."
-                    : googleError}
-                </div>
-              ) : null}
-
-              <form className="mt-8 space-y-5">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="email"
-                    className="text-sm font-medium text-foreground"
-                  >
-                    Email address
-                  </label>
-                  <div className="relative">
-                    <Mail className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="name@company.com"
-                      autoComplete="email"
-                      className="pl-11"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-3">
-                    <label
-                      htmlFor="password"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Password
-                    </label>
-                    <Link
-                      href="#"
-                      className="text-sm font-medium text-primary transition-colors hover:text-primary/80"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <div className="relative">
-                    <LockKeyhole className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      autoComplete="current-password"
-                      className="pl-11"
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  type="button"
-                  className="h-12 w-full rounded-2xl text-sm font-semibold shadow-[0_18px_30px_-18px_color-mix(in_oklab,var(--color-primary)_85%,transparent)]"
-                >
-                  Continue
-                  <ArrowRight className="size-4" />
-                </Button>
-
-                <div className="relative py-1">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border/70" />
-                  </div>
-                  <div className="relative flex justify-center">
-                    <span className="bg-background px-3 text-xs font-medium tracking-[0.22em] text-muted-foreground uppercase">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
 
                 <Button
                   onClick={handleGoogleSignIn}
                   type="button"
                   variant="outline"
                   disabled={googleLoading}
-                  className="h-12 w-full rounded-2xl border-border/70 bg-background/60 text-sm font-semibold"
+                  className="mt-6 h-14 w-full rounded-2xl border-border/70 bg-background text-base font-semibold shadow-none"
                 >
                   {googleLoading ? (
                     <LoaderCircle className="size-4 animate-spin" />
                   ) : (
                     <GoogleMark />
                   )}
-                  {googleLoading ? "Redirecting to Google..." : "Sign in with Google"}
+                  {googleLoading ? "Redirecting to Google..." : "Continue with Google"}
                 </Button>
-              </form>
-
-              <div className="mt-6 flex items-start gap-3 rounded-2xl border border-border/60 bg-muted/60 p-4 text-sm text-muted-foreground">
-                <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
-                <p className="leading-6">
-                  Protected by modern authentication patterns, quiet visual
-                  hierarchy, and responsive spacing for desktop and mobile.
-                </p>
               </div>
+
+              {googleError ? (
+                <div className="mt-5 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                  {googleError === "google_auth_failed"
+                    ? "Google sign-in was cancelled or failed. Please try again."
+                    : googleError}
+                </div>
+              ) : null}
+
             </div>
           </div>
         </section>
-      </div>
+
+    
     </main>
   );
 }

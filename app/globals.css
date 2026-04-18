@@ -1,8 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Sekuya&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+
+
 @custom-variant dark (&:is(.dark *));
+
+
+.sekuya-regular {
+  font-family: "Sekuya", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.nunito-special-regular {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -66,10 +90,10 @@
     "Aptos Mono",
     "Consolas",
     monospace;
-  --background: oklch(0.98 0.01 95);
-  --foreground: oklch(0.22 0.02 250);
-  --card: oklch(0.995 0.006 95);
-  --card-foreground: oklch(0.22 0.02 250);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.22 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.02 250);
   --primary: oklch(0.39 0.09 256);
@@ -144,11 +168,6 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    background-image:
-      radial-gradient(circle at top left, color-mix(in oklab, var(--color-accent) 28%, transparent) 0, transparent 32%),
-      radial-gradient(circle at bottom right, color-mix(in oklab, var(--color-primary) 22%, transparent) 0, transparent 36%),
-      linear-gradient(180deg, color-mix(in oklab, var(--color-background) 88%, white) 0%, var(--color-background) 100%);
-    background-attachment: fixed;
+    @apply bg-white text-foreground;
   }
 }
