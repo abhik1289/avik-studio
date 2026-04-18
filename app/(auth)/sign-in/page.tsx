@@ -1,7 +1,5 @@
-export default function Home() {
-  return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-  )
+import { SignInPanel } from "@/components/auth/sign-in-panel";
+
+export default function SignInPage() {
+  return <SignInPanel />;
 }
