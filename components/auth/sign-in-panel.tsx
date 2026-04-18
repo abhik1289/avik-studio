@@ -1,15 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
   Globe,
+  LoaderCircle,
   LockKeyhole,
   Mail,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import { useState } from "react";
 
-import { ThemeToggle } from "@/components/auth/theme-toggle";
+import { ModeToggle } from "@/components/auth/theme-toggle";
+import { authClient } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -54,7 +59,36 @@ function GoogleMark() {
   );
 }
 
-export function SignInPanel() {
+type SignInPanelProps = {
+  initialError?: string;
+};
+
+export function SignInPanel({ initialError }: SignInPanelProps) {
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(
+    initialError ?? null
+  );
+
+  async function handleGoogleSignIn() {
+    try {
+      setGoogleLoading(true);
+      setGoogleError(null);
+
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+        errorCallbackURL: "/sign-in?error=google_auth_failed",
+      });
+    } catch (error) {
+      setGoogleError(
+        error instanceof Error
+          ? error.message
+          : "Google sign-in could not be started. Please try again."
+      );
+      setGoogleLoading(false);
+    }
+  }
+
   return (
     <main className="relative isolate min-h-screen overflow-hidden px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
@@ -68,7 +102,7 @@ export function SignInPanel() {
             </span>
             Avik Studio
           </Link>
-          <ThemeToggle />
+          <ModeToggle />
         </div>
 
         <section className="grid min-h-[calc(100vh-7rem)] overflow-hidden rounded-[2rem] border border-border/60 bg-card/75 shadow-[0_24px_80px_-32px_rgba(15,23,42,0.45)] backdrop-blur xl:grid-cols-[1.15fr_0.85fr]">
@@ -123,6 +157,14 @@ export function SignInPanel() {
                 </p>
               </div>
 
+              {googleError ? (
+                <div className="mt-6 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                  {googleError === "google_auth_failed"
+                    ? "Google sign-in was cancelled or failed. Please try again."
+                    : googleError}
+                </div>
+              ) : null}
+
               <form className="mt-8 space-y-5">
                 <div className="space-y-2">
                   <label
@@ -170,7 +212,10 @@ export function SignInPanel() {
                   </div>
                 </div>
 
-                <Button className="h-12 w-full rounded-2xl text-sm font-semibold shadow-[0_18px_30px_-18px_color-mix(in_oklab,var(--color-primary)_85%,transparent)]">
+                <Button
+                  type="button"
+                  className="h-12 w-full rounded-2xl text-sm font-semibold shadow-[0_18px_30px_-18px_color-mix(in_oklab,var(--color-primary)_85%,transparent)]"
+                >
                   Continue
                   <ArrowRight className="size-4" />
                 </Button>
@@ -187,12 +232,18 @@ export function SignInPanel() {
                 </div>
 
                 <Button
+                  onClick={handleGoogleSignIn}
                   type="button"
                   variant="outline"
+                  disabled={googleLoading}
                   className="h-12 w-full rounded-2xl border-border/70 bg-background/60 text-sm font-semibold"
                 >
-                  <GoogleMark />
-                  Sign in with Google
+                  {googleLoading ? (
+                    <LoaderCircle className="size-4 animate-spin" />
+                  ) : (
+                    <GoogleMark />
+                  )}
+                  {googleLoading ? "Redirecting to Google..." : "Sign in with Google"}
                 </Button>
               </form>
 
