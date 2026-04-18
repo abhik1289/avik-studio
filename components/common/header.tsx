@@ -1,9 +1,7 @@
 "use client"
 
-import React from 'react'
 import { ModeToggle } from './theme-toggle'
 import { User, Settings, LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,10 +19,9 @@ function MainAppHeader() {
 
   const userName = data?.user?.name || "User Name";
   const userEmail = data?.user?.email || "User Email";
-  const userImage = data?.user?.image || null;
 
   return (
-    <header className="border-b border-border/60 bg-white/95 dark:bg-background/95 backdrop-blur-xl sticky top-0 z-50 shadow-[0_1px_3px_0_rgba(0,0,0,0.04),0_1px_2px_0_rgba(0,0,0,0.02)]">
+    <header className="border-b border-border/60 bg-white/95 dark:bg-background/95 backdrop-blur-xl sticky top-0 z-50 ">
       <div className="flex items-center justify-between px-6 py-2.5 h-14 max-w-[1600px] mx-auto">
         {/* Logo - Left Side */}
         <div className="flex items-center gap-3">
@@ -32,7 +29,7 @@ function MainAppHeader() {
             <span className="text-white font-bold text-lg">A</span>
           </div>
           <div className="select-none">
-            <h1 className="font-semibold text-lg tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">Avik</h1>
+            <h1 className="font-semibold text-lg tracking-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">Avik Studio</h1>
             <p className="text-xs text-muted-foreground/80 -mt-0.5 font-medium">Life Manager</p>
           </div>
         </div>

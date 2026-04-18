@@ -14,48 +14,60 @@ export default function DashboardPage() {
       name: 'Finance',
       description: 'Track expenses, budgets & savings',
       icon: DollarSign,
-      color: 'from-emerald-500 to-teal-600',
-      bg: 'bg-emerald-50 dark:bg-emerald-950/30',
+      color: 'from-slate-700 to-slate-900',
+      bg: 'bg-slate-50 dark:bg-slate-900/30',
+      shadow: 'shadow-slate-200/60',
+      ring: 'hover:ring-slate-300',
     },
     {
       id: 'notes',
       name: 'Notes',
       description: 'Capture ideas, thoughts & documents',
       icon: FileText,
-      color: 'from-blue-500 to-indigo-600',
-      bg: 'bg-blue-50 dark:bg-blue-950/30',
+      color: 'from-slate-700 to-slate-900',
+      bg: 'bg-slate-50 dark:bg-slate-900/30',
+      shadow: 'shadow-slate-200/60',
+      ring: 'hover:ring-slate-300',
     },
     {
       id: 'goals',
       name: 'Goals',
       description: 'Set & track your life objectives',
       icon: Target,
-      color: 'from-violet-500 to-purple-600',
-      bg: 'bg-violet-50 dark:bg-violet-950/30',
+      color: 'from-slate-700 to-slate-900',
+      bg: 'bg-slate-50 dark:bg-slate-900/30',
+      shadow: 'shadow-slate-200/60',
+      ring: 'hover:ring-slate-300',
     },
     {
       id: 'reminders',
       name: 'Reminders',
       description: 'Never miss important tasks',
       icon: Bell,
-      color: 'from-amber-500 to-orange-600',
-      bg: 'bg-amber-50 dark:bg-amber-950/30',
+      color: 'from-slate-700 to-slate-900',
+      bg: 'bg-slate-50 dark:bg-slate-900/30',
+      shadow: 'shadow-slate-200/60',
+      ring: 'hover:ring-slate-300',
     },
     {
       id: 'calendar',
       name: 'Calendar',
       description: 'Schedule your daily activities',
       icon: Calendar,
-      color: 'from-rose-500 to-pink-600',
-      bg: 'bg-rose-50 dark:bg-rose-950/30',
+      color: 'from-slate-700 to-slate-900',
+      bg: 'bg-slate-50 dark:bg-slate-900/30',
+      shadow: 'shadow-slate-200/60',
+      ring: 'hover:ring-slate-300',
     },
     {
       id: 'analytics',
       name: 'Analytics',
       description: 'View insights & progress reports',
       icon: TrendingUp,
-      color: 'from-cyan-500 to-blue-600',
-      bg: 'bg-cyan-50 dark:bg-cyan-950/30',
+      color: 'from-slate-700 to-slate-900',
+      bg: 'bg-slate-50 dark:bg-slate-900/30',
+      shadow: 'shadow-slate-200/60',
+      ring: 'hover:ring-slate-300',
     },
   ]
 
@@ -86,18 +98,21 @@ export default function DashboardPage() {
 
         {/* Module Navigation - MS Office Style Ribbon */}
         <div className="mb-10">
-          <h3 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wider">Applications</h3>
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-[0.08em]">Applications</h3>
+              <div className="h-px flex-1 bg-border/50 ml-6 rounded-full" />
+            </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {modules.map((module) => {
               const Icon = module.icon
               return (
-                <Card key={module.id} className={`group cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-1 border-border ${module.bg}`}>
-                  <div className="p-5 flex flex-col items-center text-center">
-                    <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${module.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-sm`}>
-                      <Icon className="h-6 w-6 text-white" />
+                <Card key={module.id} className={`group cursor-pointer transition-all duration-300 hover:-translate-y-1 border shadow-sm hover:shadow-md bg-card ${module.ring} hover:ring-2 hover:ring-opacity-50`}>
+                  <div className="p-6 flex flex-col items-center text-center">
+                    <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${module.color} flex items-center justify-center mb-4 group-hover:scale-105 transition-all duration-200 shadow-md`}>
+                      <Icon className="h-7 w-7 text-white" />
                     </div>
-                    <h4 className="font-semibold text-sm">{module.name}</h4>
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{module.description}</p>
+                    <h4 className="font-semibold text-base text-foreground">{module.name}</h4>
+                    <p className="text-xs text-muted-foreground/80 mt-1.5 line-clamp-2 leading-relaxed">{module.description}</p>
                   </div>
                 </Card>
               )
@@ -114,7 +129,7 @@ export default function DashboardPage() {
             </Button>
           </div>
           
-          <Card className="">
+          <Card className="border">
             <div className="divide-y divide-border">
               {recentHistory.map((item) => {
                 const Icon = item.icon

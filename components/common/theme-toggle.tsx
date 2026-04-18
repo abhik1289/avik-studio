@@ -1,40 +1,44 @@
 "use client"
 
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { useModeAnimation } from 'react-theme-switch-animation'
+import { Moon, Sun } from 'lucide-react'
 
 export function ModeToggle() {
-  const { setTheme } = useTheme()
+  const { ref, toggleSwitchTheme, isDarkMode } = useModeAnimation()
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-xl h-10 w-10 border border-transparent hover:border-border/50 hover:bg-accent/50 transition-all duration-200">
-          <Sun className="h-[1.15rem] w-[1.15rem] scale-100 rotate-0 transition-all duration-300 dark:scale-0 dark:-rotate-90" />
-          <Moon className="absolute h-[1.15rem] w-[1.15rem] scale-0 rotate-90 transition-all duration-300 dark:scale-100 dark:rotate-0" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <button
+      ref={ref}
+      onClick={toggleSwitchTheme}
+      className="
+        relative
+        h-10 w-10
+        flex items-center justify-center
+        rounded-md
+       
+        transition-all duration-200
+        mt-0
+        cursor-pointer
+      "
+      aria-label="Toggle theme"
+    >
+      <Sun
+        className="
+          h-[1.2rem] w-[1.2rem]
+          rotate-0 scale-100
+          transition-all duration-300
+          dark:-rotate-90 dark:scale-0
+        "
+      />
+      <Moon
+        className="
+          absolute
+          h-[1.2rem] w-[1.2rem]
+          rotate-90 scale-0
+          transition-all duration-300
+          dark:rotate-0 dark:scale-100
+        "
+      />
+    </button>
   )
 }
