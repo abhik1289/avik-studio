@@ -1,11 +1,21 @@
+import { Button } from '@/components/ui/button'
 import React from 'react'
 
-function SubmitButton() {
+
+
+interface AvikStudioButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+ title: string
+ icon: React.ReactNode
+}
+
+
+function AvikStudioButton({ title, icon, ...props }: AvikStudioButtonProps) {
   return (
-    <div>
-      
-    </div>
+    <Button {...props}>
+      {icon && <span className="size-4">{icon}</span>}
+      <span>{title}</span>
+    </Button>
   )
 }
 
-export default SubmitButton
+export default AvikStudioButton

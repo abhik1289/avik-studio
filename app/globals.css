@@ -1,13 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Sekuya&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Sekuya&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-
-
 @custom-variant dark (&:is(.dark *));
-
 
 .sekuya-regular {
   font-family: "Sekuya", system-ui;
@@ -74,22 +71,11 @@
 
 :root {
   --font-sans-ui:
-    "Aptos",
-    "Segoe UI Variable Text",
-    "Trebuchet MS",
-    "Segoe UI",
-    sans-serif;
+    "Aptos", "Segoe UI Variable Text", "Trebuchet MS", "Segoe UI", sans-serif;
   --font-sans-display:
-    "Aptos Display",
-    "Aptos",
-    "Segoe UI Variable Display",
-    "Trebuchet MS",
+    "Aptos Display", "Aptos", "Segoe UI Variable Display", "Trebuchet MS",
     sans-serif;
-  --font-mono-ui:
-    "Cascadia Code",
-    "Aptos Mono",
-    "Consolas",
-    monospace;
+  --font-mono-ui: "Cascadia Code", "Aptos Mono", "Consolas", monospace;
   --background: oklch(1 0 0);
   --foreground: oklch(0.22 0 0);
   --card: oklch(1 0 0);
