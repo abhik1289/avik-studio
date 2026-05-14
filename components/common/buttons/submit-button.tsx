@@ -9,7 +9,7 @@ interface AvikStudioButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEle
 }
 
 
-function AvikStudioButton({ title, icon, ...props }: AvikStudioButtonProps) {
+function AddButton({ title, icon, ...props }: AvikStudioButtonProps) {
   return (
     <Button {...props}>
       {icon && <span className="size-4">{icon}</span>}
@@ -18,4 +18,4 @@ function AvikStudioButton({ title, icon, ...props }: AvikStudioButtonProps) {
   )
 }
 
-export default AvikStudioButton
+export default AddButton

@@ -21,37 +21,37 @@ export const financeMenu: FinanceMenuItem[] = [
   {
     id: 1,
     name: "Dashboard",
-    href: `${main_finance_url}/dashboard`,
+    href: `/dashboard`,
     icon: LayoutDashboardIcon,
   },
   {
     id: 2,
     name: "Transactions",
-    href: `${main_finance_url}/transactions`,
+    href: `/transactions`,
     icon: ReceiptTextIcon,
   },
   {
     id: 3,
     name: "Reports",
-    href: `${main_finance_url}/reports`,
+    href: `/reports`,
     icon: ChartPieIcon,
   },
   {
     id: 4,
     name: "Categories",
-    href: `${main_finance_url}/categories`,
+    href: `/categories`,
     icon: ListTreeIcon,
   },
   {
     id: 5,
     name: "Budget",
-    href: `${main_finance_url}/budget`,
+    href: `/budget`,
     icon: WalletCardsIcon,
   },
   {
     id: 6,
     name: "Settings",
-    href: `${main_finance_url}/settings`,
+    href: `/settings`,
     icon: Settings2Icon,
   },
 ]
