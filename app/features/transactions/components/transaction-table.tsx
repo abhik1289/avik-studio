@@ -306,7 +306,9 @@ function TransactionTable() {
         ),
         cell: ({ row }) => (
           <span className="text-muted-foreground">
-            {row.original.createdAt.toLocaleDateString()}
+            {row.original.createdAt.toLocaleDateString("en-US", {
+              timeZone: "UTC",
+            })}
           </span>
         ),
       },

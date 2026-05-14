@@ -1,15 +1,20 @@
 "use client"
 
 import React from "react"
-import { AddOrUpdateTransactionModel } from "@/components/models/add-or-update-transaction-model"
+import { Plus } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { AddOrUpdateTransactionDialog } from "@/components/models/add-or-update-transaction-dialog"
 import { TransactionTable } from "@/app/features/transactions/components/transaction-table"
-import { type TransactionFormValues } from "@/lib/schemas/transaction.schema"
-import { Card, CardContent} from "@/components/ui/card"
+import { useTransactionModalStore } from "@/lib/store/transactio.store."
+import { Card, CardContent } from "@/components/ui/card"
+import type { TransactionFormValues } from "@/lib/schemas/transaction.schema"
 
 function TransactionsPage() {
-  const handleAddTransaction = (values: TransactionFormValues) => {
-    console.log("New Transaction:", values)
-    // TODO: Implement API call to save transaction
+  const { isOpen, openModal, closeModal } = useTransactionModalStore()
+
+  const handleAddTransaction = async (values: TransactionFormValues) => {
+    // TODO: replace with real API call / store dispatch
+    console.log("New transaction:", values)
   }
 
   return (
@@ -22,7 +27,10 @@ function TransactionsPage() {
             Manage your financial transactions
           </p>
         </div>
-        <AddOrUpdateTransactionModel onSubmit={handleAddTransaction} />
+        <Button onClick={() => openModal({ onSubmit: handleAddTransaction })}>
+          <Plus className="size-4" />
+          <span>Add Transaction</span>
+        </Button>
       </div>
 
       {/* Summary Cards */}
@@ -41,40 +49,42 @@ function TransactionsPage() {
           </CardContent>
         </Card>
         <Card className="border-r rounded-none">
-         
           <CardContent>
-             <div className="title text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                          Total Expenses
-
+            <div className="title text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Total Expenses
             </div>
-            <div className="text-2xl font-extrabold text-red-600">
-              $597.23
-            </div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-extrabold text-red-600">$597.23</div>
+            <p className="text-xs font-medium text-muted-foreground">
               -8% from last month
             </p>
           </CardContent>
         </Card>
-        <Card className=" rounded-none">
-         
+        <Card className="rounded-none">
           <CardContent>
-             <div className="title text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                       Balance
-
-
+            <div className="title text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Balance
             </div>
-            <div className="text-2xl font-extrabold">
-              $5,902.77
-            </div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-extrabold">$5,902.77</div>
+            <p className="text-xs font-medium text-muted-foreground">
               Net positive this month
             </p>
           </CardContent>
         </Card>
       </Card>
+
       <Card>
-          <TransactionTable />
+        <TransactionTable />
       </Card>
+
+      {/* Dialog controlled by Zustand store */}
+      <AddOrUpdateTransactionDialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (!open) closeModal()
+        }}
+        initialValues={{}}
+        onSubmit={handleAddTransaction}
+      />
     </div>
   )
 }
