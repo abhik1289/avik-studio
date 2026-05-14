@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash2, Columns3, Star } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Pencil, Trash2, Columns3, Star, RefreshCw, Search, SlidersHorizontal, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import { Pagination } from "@/components/common/pagination"
 import { cn } from "@/lib/utils"
 import { TRANSACTION_CATEGORIES, TRANSACTION_TYPES } from "@/lib/schemas/transaction.schema"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -44,7 +45,8 @@ type Transaction = {
   amount: number
   description?: string
   createdAt: Date
-  important?: boolean // ← new field
+  important?: boolean
+  recurring?: boolean
 }
 
 // ─── Dummy data ───────────────────────────────────────────────────────────────
@@ -59,6 +61,7 @@ const dummyTransactions: Transaction[] = [
     description: "Monthly salary from Tech Corp",
     createdAt: new Date("2026-05-01"),
     important: true,
+    recurring: true,
   },
   {
     id: "2",
@@ -86,6 +89,7 @@ const dummyTransactions: Transaction[] = [
     amount: 15.99,
     description: "Monthly streaming service",
     createdAt: new Date("2026-05-10"),
+    recurring: true,
   },
   {
     id: "5",
@@ -96,6 +100,7 @@ const dummyTransactions: Transaction[] = [
     description: "Monthly electricity bill",
     createdAt: new Date("2026-05-12"),
     important: true,
+    recurring: true,
   },
   {
     id: "6",
@@ -134,6 +139,15 @@ function TransactionTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [globalFilter, setGlobalFilter] = useState("")
   const [rowSelection, setRowSelection] = useState({})
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+
+  const totalPages = Math.ceil(data.length / pageSize)
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * pageSize
+    return data.slice(start, start + pageSize)
+  }, [data, currentPage, pageSize])
 
   // Toggle the important flag for a single row
   const toggleImportant = (id: string) => {
@@ -185,17 +199,40 @@ function TransactionTable() {
             <button
               onClick={() => toggleImportant(row.original.id)}
               aria-label={isImportant ? "Unmark important" : "Mark as important"}
-              className="flex items-center justify-center rounded-sm p-0.5 transition-colors hover:bg-muted"
+              className="group flex items-center justify-center rounded-sm p-1 transition-all duration-200 hover:bg-amber-100 dark:hover:bg-amber-900/40 active:scale-90"
             >
               <Star
                 className={cn(
-                  "size-4 transition-colors",
+                  "size-5 transition-all duration-200",
                   isImportant
-                    ? "fill-amber-400 text-amber-400"
-                    : "fill-transparent text-muted-foreground hover:text-amber-400"
+                    ? "fill-amber-400 text-amber-400 drop-shadow-sm"
+                    : "fill-transparent text-muted-foreground group-hover:text-amber-400"
                 )}
               />
             </button>
+          )
+        },
+      },
+
+      // ── Recurring indicator ────────────────────────────────────────────────
+      {
+        id: "recurring",
+        enableSorting: false,
+        enableHiding: false,
+        header: () => (
+          <RefreshCw
+            className="size-4 text-muted-foreground"
+            aria-label="Recurring"
+          />
+        ),
+        cell: ({ row }) => {
+          const isRecurring = row.original.recurring ?? false
+          if (!isRecurring) return null
+          return (
+            <span className="relative flex items-center justify-center">
+              <span className="absolute size-2 rounded-full bg-indigo-400 animate-ping opacity-75" />
+              <span className="relative size-2 rounded-full bg-indigo-500" />
+            </span>
           )
         },
       },
@@ -368,7 +405,7 @@ function TransactionTable() {
   )
 
   const table = useReactTable({
-    data,
+    data: paginatedData,
     columns,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
@@ -387,18 +424,49 @@ function TransactionTable() {
   return (
     <div className="w-full space-y-4">
       {/* ── Toolbar ──────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between gap-4">
-        <Input
-          placeholder="Search transactions..."
-          value={globalFilter ?? ""}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          className="max-w-sm"
-        />
+      <div className="flex items-center gap-3">
+        {/* Search field with icon */}
+        <div className="relative flex-1 max-w-sm">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            <Search className="size-4" />
+          </span>
+          <Input
+            placeholder="Search transactions..."
+            value={globalFilter ?? ""}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            className="pl-9 h-9 bg-muted/40 border-0 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:bg-background rounded-xl"
+          />
+        </div>
+
+        {/* Filter button */}
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-9 gap-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60 border-dashed"
+        >
+          <SlidersHorizontal className="size-4" />
+          <span>Filter</span>
+        </Button>
+
+        {/* Download / Export button */}
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-9 gap-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60 border-dashed"
+        >
+          <Download className="size-4" />
+          <span className="hidden sm:inline">Export</span>
+        </Button>
+
+        {/* Spacer */}
+        <div className="ml-auto" />
+
+        {/* Columns toggle */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="ml-auto">
-              <Columns3 className="mr-2 size-4" />
-              Columns
+            <Button variant="outline" size="sm" className="h-9 gap-2 rounded-xl">
+              <Columns3 className="size-4" />
+              <span className="hidden sm:inline">Columns</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[150px]">
@@ -421,8 +489,8 @@ function TransactionTable() {
         </DropdownMenu>
       </div>
 
-      {/* ── Table ────────────────────────────────────────────────────────── */}
-      <div className="rounded-lg border bg-card">
+      {/* ── Table with sticky pagination ─────────────────────────────────── */}
+      <div className="rounded-xl border bg-card overflow-hidden">
         <Table className="w-full">
           <TableHeader className="border-b items-center">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -451,10 +519,17 @@ function TransactionTable() {
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={cn(
-                    "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-                    // Subtle amber left-border highlight for starred rows
+                    "border-b transition-all duration-200 hover:bg-muted/50 data-[state=selected]:bg-muted",
+                    // Amber left-border + tint for important rows
                     row.original.important &&
-                      "border-l-2 border-l-amber-400 bg-amber-50/40 dark:bg-amber-900/10"
+                      "border-l-2 border-l-amber-400 bg-amber-50/40 dark:bg-amber-900/10",
+                    // Subtle indigo tint for recurring rows
+                    row.original.recurring &&
+                      !row.original.important &&
+                      "bg-indigo-50/40 dark:bg-indigo-950/20",
+                    row.original.recurring &&
+                      row.original.important &&
+                      "bg-indigo-50/20 dark:bg-indigo-950/10"
                   )}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -479,17 +554,23 @@ function TransactionTable() {
             )}
           </TableBody>
         </Table>
-      </div>
 
-      {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected
-        </span>
-        <span>
-          Showing {table.getRowModel().rows?.length} of {data.length} transactions
-        </span>
+        {/* Sticky personal pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={data.length}
+          pageSize={pageSize}
+          onPageChange={(page) => {
+            setCurrentPage(page)
+            setRowSelection({})
+          }}
+          onPageSizeChange={(size) => {
+            setPageSize(size)
+            setCurrentPage(1)
+            setRowSelection({})
+          }}
+        />
       </div>
     </div>
   )
