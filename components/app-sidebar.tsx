@@ -14,6 +14,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar"
 import {
   LayoutDashboardIcon,
@@ -66,10 +67,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar variant="inset" collapsible="offcanvas" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border/60">
+      <SidebarHeader className="border-b border-[#E2E8F0]/50">
         {/* Brand logo + name */}
         <div className="flex items-center gap-3 px-3 py-4">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary/90 to-primary text-primary-foreground shadow-sm ring-1 ring-primary/20">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-[#0F172A] text-white shadow-sm">
             <svg
               width="18"
               height="18"
@@ -84,8 +85,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </svg>
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold tracking-tight">Avik Studio</span>
-            <span className="truncate text-xs text-muted-foreground">Finance Workspace</span>
+            <span className="truncate font-semibold tracking-tight text-[#0F172A]">Avik Studio</span>
+            <span className="truncate text-xs text-[#64748B]">Finance Workspace</span>
           </div>
         </div>
       </SidebarHeader>
@@ -93,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent className="px-2 py-3">
         {SIDEBAR_NAV_GROUPS.map((group) => (
           <SidebarGroup key={group.id} className="mb-4">
-            <SidebarGroupLabel className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/70">
+            <SidebarGroupLabel className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-widest text-[#94A3B8]">
               {group.label}
             </SidebarGroupLabel>
             <SidebarMenu>
@@ -109,20 +110,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       className={cn(
                         "relative h-10 w-full gap-3 rounded-xl px-3 font-medium transition-all duration-200",
                         isActive
-                          ? "bg-primary/10 text-primary font-semibold shadow-sm ring-1 ring-primary/15 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:rounded-r-full before:bg-primary"
-                          : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+                          ? "bg-[#0F172A] text-white font-semibold shadow-sm before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-5 before:w-1 before:rounded-r-full before:bg-[#0F172A]"
+                          : "text-[#64748B] hover:bg-[#F8F9FC] hover:text-[#0F172A]"
                       )}
                       asChild
                     >
                       <a href={item.href}>
-                        {/* Active glow dot */}
+                        {/* Active indicator dot */}
                         {isActive && (
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 size-1.5 rounded-full bg-primary animate-pulse" />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 size-1.5 rounded-full bg-white/60 animate-pulse" />
                         )}
                         <Icon
                           className={cn(
                             "size-[18px] shrink-0 transition-colors",
-                            isActive ? "text-primary" : "text-muted-foreground group-hover/menu-button:text-foreground"
+                            isActive ? "text-white" : "text-[#94A3B8] group-hover/menu-button:text-[#0F172A]"
                           )}
                         />
                         <span>{item.name}</span>
@@ -136,28 +137,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border/60 p-3">
+      <SidebarFooter className="border-t border-[#E2E8F0]/50 p-3">
         {/* Notification button */}
-        <div className="mb-2 flex items-center gap-2 rounded-xl bg-muted/60 px-3 py-2">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <div className="mb-2 flex items-center gap-2 rounded-xl bg-[#F8F9FC] px-3 py-2 border border-[#E2E8F0]/50 shadow-sm">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#0F172A] text-white">
             <BellIcon className="size-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-xs font-medium leading-tight">3 new alerts</p>
-            <p className="truncate text-[10px] text-muted-foreground">Budget threshold reached</p>
+            <p className="truncate text-xs font-medium leading-tight text-[#0F172A]">3 new alerts</p>
+            <p className="truncate text-[10px] text-[#64748B]">Budget threshold reached</p>
           </div>
         </div>
 
         {/* User profile */}
-        <div className="flex items-center gap-3 rounded-xl bg-sidebar-accent/50 px-3 py-2.5 ring-1 ring-sidebar-border/60">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 text-white shadow-sm">
+        <div className="flex items-center gap-3 rounded-xl bg-[#F8F9FC] px-3 py-2.5 border border-[#E2E8F0]/50 shadow-sm">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#0F172A] text-white shadow-sm">
             <UserIcon className="size-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="truncate text-sm font-semibold leading-tight">Abhishek Kumar</p>
-            <p className="truncate text-[10px] text-muted-foreground">Premium Plan</p>
+            <p className="truncate text-sm font-semibold leading-tight text-[#0F172A]">Abhishek Kumar</p>
+            <p className="truncate text-[10px] text-[#64748B]">Premium Plan</p>
           </div>
-          <button className="flex size-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground">
+          <button className="flex size-7 shrink-0 items-center justify-center rounded-lg text-[#94A3B8] transition-colors hover:bg-[#F8F9FC] hover:text-[#0F172A]">
             <ChevronUpIcon className="size-4" />
           </button>
         </div>
